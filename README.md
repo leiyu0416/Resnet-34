@@ -1,5 +1,38 @@
 # Resnet-34
 
+## What grammar issues occurred in the template for building the model and what consequences would it have?
+
+```import torch 
+ import torch . nn as nn 
+ import torch . nn . functional as F 
+
+class xxxNet ( nn . Module ):
+ def __ init __( self ):
+ pass 
+ 
+ def forward ( x ):
+ return x 
+```
+### The problem with the previous code segment
+
+   If the parent class nn.Module is not called__ init__ Method, then the xxxNet class will not inherit the properties and methods of the nn.Module class. In this way, the xxxNet class cannot use the methods provided by the nn.Module class, nor can it perform model training and evaluation correctly, which will result in the model not working properly.So, we need to call the parent class's__ init__ method.
+
+   By using self, we can access and modify the properties and methods of this instance object in the methods of the class.
+
+### The code modification is as follows
+
+```import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class xxxNet(nn.Module):
+    def __init__(self):
+        super(xxxNet, self).__init__() # 调用父类的__init__的方法
+    
+    def forward(self, x):
+        return x
+ ```
+
 ## Resnet-34 section code comments
 
 ```import torch
