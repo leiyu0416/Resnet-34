@@ -86,16 +86,16 @@ class ResNet32(nn.Module):
         return nn.Sequential(*layer_list)
 
     def forward(self, x):
-        x = self.conv1(x)  # [bs, 64, 56, 56] 特征提取过程
-        x = self.maxpooling(x)  # [bs, 64, 28, 28]池化，降低分辨率和计算量
-        x = self.layer1(x)  # [8, 64, 56, 56] 残差层，是一个由3个Block组成的序列，对输入数据进行特征提取。
-        x = self.layer2(x)  # [8, 128, 28, 28] 残差层，是一个由4个Block组成的序列，对输入数据进行特征提取。
-        x = self.layer3(x)  # [8, 256, 14, 14] 残差层，是一个由6个Block组成的序列，对输入数据进行特征提取。
-        x = self.layer4(x)  # [8, 512, 7, 7] 残差层，是一个由3个Block组成的序列，对输入数据进行特征提取。
-        x = self.avgpooling(x)  # [8, 512, 3, 3] 对输入数据x进行平均池化，降低数据维度，去除冗余信息。
-        x = x.view(x.shape[0], -1)  # [8, 4608] 将张量 x 重新调整为一个二维张量，-1表示自动计算该维度的大小，使得张量的总大小保持不变。
-        x = self.classifier(x)  # [8, 2] 将输入数据x通过一个全连接层进行分类。
-        output = F.softmax(x)  # [8, 2] 对输入数据x进行softmax操作,每一行都被转换为概率分布
+        x = self.conv1(x)  # [bs, 64, 112, 112] 特征提取过程
+        x = self.maxpooling(x)  # [bs, 64, 56, 56]池化，降低分辨率和计算量
+        x = self.layer1(x)  # [bs, 64, 56, 56] 残差层，是一个由3个Block组成的序列，对输入数据进行特征提取。
+        x = self.layer2(x)  # [bs, 128, 28, 28] 残差层，是一个由4个Block组成的序列，对输入数据进行特征提取。
+        x = self.layer3(x)  # [bs, 256, 14, 14] 残差层，是一个由6个Block组成的序列，对输入数据进行特征提取。
+        x = self.layer4(x)  # [bs, 512, 7, 7] 残差层，是一个由3个Block组成的序列，对输入数据进行特征提取。
+        x = self.avgpooling(x)  # [bs, 512, 3, 3] 对输入数据x进行平均池化，降低数据维度，去除冗余信息。
+        x = x.view(x.shape[0], -1)  # [bs, 4608] 将张量 x 重新调整为一个二维张量，-1表示自动计算该维度的大小，使得张量的总大小保持不变。
+        x = self.classifier(x)  # [bs, num_classes] 将输入数据x通过一个全连接层进行分类。
+        output = F.softmax(x)  # [bs, num_classes] 对输入数据x进行softmax操作,每一行都被转换为概率分布
 
         return output
 
