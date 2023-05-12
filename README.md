@@ -92,10 +92,10 @@ class ResNet32(nn.Module):
         x = self.layer2(x)  # [bs, 128, 28, 28] 残差层，是一个由4个Block组成的序列，对输入数据进行特征提取。
         x = self.layer3(x)  # [bs, 256, 14, 14] 残差层，是一个由6个Block组成的序列，对输入数据进行特征提取。
         x = self.layer4(x)  # [bs, 512, 7, 7] 残差层，是一个由3个Block组成的序列，对输入数据进行特征提取。
-        x = self.avgpooling(x)  # [bs, 512, 3, 3]对输入数据x进行平均池化，降低数据维度，去除冗余信息。
-        x = x.view(x.shape[0], -1)  # [bs, 4608]将张量 x 重新调整为一个二维张量，
-        x = self.classifier(x)  # [bs, self.num_classes]将输入数据x通过一个全连接层进行分类。
-        output = F.softmax(x)  # [bs, self.num_classes]对输入数据x进行softmax操作,每一行都被转换为概率分布
+        x = self.avgpooling(x)  # [bs, 512, 3, 3] 对输入数据x进行平均池化，降低数据维度，去除冗余信息。
+        x = x.view(x.shape[0], -1)  # [bs, 4608] 将张量 x 重新调整为一个二维张量，-1表示自动计算该维度的大小，使得张量的总大小保持不变。
+        x = self.classifier(x)  # [bs, self.num_classes] 将输入数据x通过一个全连接层进行分类。
+        output = F.softmax(x)  # [bs, self.num_classes] 对输入数据x进行softmax操作,每一行都被转换为概率分布
 
         return output
 
@@ -106,3 +106,25 @@ if __name__=='__main__':
     out = model(t)
     print(out.shape)
 ```
+
+## Functions of each parameter
+
+kernel_ Size=3 indicates that the size of the convolutional kernel is 3x3.
+
+Street=street indicates that the step size of each movement of the convolutional kernel is street.
+
+Padding=1 indicates filling 1 pixel at the edge of the image before the convolution operation.
+
+Conv1: A convolutional layer with a convolutional kernel size of 7x7, a step size of 2, and a padding of 3.
+
+Bn1: A batch normalization layer. It can accelerate the training of the model and improve its accuracy.
+
+Relu1: a activation function layer, which is activated using the ReLU function. It can make the model more sparse, reduce the number of parameters, and thus improve the generalization ability of the model.
+
+Maxpooling: A pooling layer that uses maximum pooling for downsampling. Maximizing pooling is a common pooling method, which can reduce the size of the feature map, improve the calculation efficiency, and reduce the risk of overfitting.
+
+Layer1: is the first residual block in the ResNet32 model, which accelerates model training and improves model accuracy
+
+Avgpooling: It is a pooling layer in the ResNet32 model that uses adaptive average pooling for global pooling. Adaptive average pooling is a commonly used pooling method that can adaptively perform pooling operations based on the size of the input feature map, thereby obtaining a fixed size output feature map.
+
+Self. classifier: A fully connected layer used to map the output feature maps of convolutional layers to category labels.
